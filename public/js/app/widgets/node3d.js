@@ -1,10 +1,15 @@
 var tweetModel = require('../model/tweetModel')
     , factory = require('../model/3dObjectFactory')
-    , DelayCall = require('../util/delayCall');
+    , DelayCall = require('../util/delayCall')
+    , colorUtil = require('../util/color');
 
 module.exports = function(audio){
 
     var CLUSTER_SIZE = 450;
+
+    var color = {
+        value : 0xffffff
+    };
 
     var particles = [],
         lineContainer,
@@ -12,7 +17,6 @@ module.exports = function(audio){
         camera,
         scene,
         renderer,
-        //controls,
         camaraTarget,
         geometry,
         current,
@@ -43,12 +47,7 @@ module.exports = function(audio){
 
         camera = new THREE.PerspectiveCamera(60, width / height, 1, 2000);
         camera.position.z = 2000; //800;
-        //camera.up = new THREE.Vector3(0,0,1);
-
         camaraTarget = new THREE.Vector3();
-
-        //controls = new THREE.OrbitControls( camera );
-        //controls.addEventListener( 'change', render );
 
         scene = new THREE.Scene();
         scene.fog = new THREE.FogExp2(0x333333, 0.002);
@@ -82,21 +81,14 @@ module.exports = function(audio){
         renderer = new THREE.WebGLRenderer({
             antialias: true,
             alpha: true
-            //premultipliedAlpha: false,
-            //autoClear: false
         });
 
         renderer.setPixelRatio( window.devicePixelRatio );
-        //renderer.sortObjects = false;
         renderer.setClearColor( scene.fog.color, 0);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         if(enablePostprocessing) initPostprocessing();
-
-        //renderer.autoClear = false;
-
         webgl.appendChild(renderer.domElement);
-
         window.addEventListener('resize', onWindowResize, false);
 
         if(enablePostprocessing){
@@ -110,9 +102,9 @@ module.exports = function(audio){
     var datGui = function(){
 
         var effectController  = {
-            focus: 0.8, //1.0,
+            focus: 0.8,
             aperture: 0.015,
-            maxblur: 0.5 // 1.0
+            maxblur: 1
         };
 
         var matChanger = function( ) {
@@ -141,7 +133,7 @@ module.exports = function(audio){
         bokehPass.renderToScreen = true;
 
         // Ensures Canvas transparency when using the effects composer
-        var renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+        var renderTarget = new THREE.WebGLRenderTarget(width, height, {
             minFilter: THREE.LinearFilter,
             magFilter: THREE.LinearFilter,
             format: THREE.RGBAFormat,
@@ -163,7 +155,6 @@ module.exports = function(audio){
     var getTweets = function(){
 
         removeChildren(particlesContainer);
-        //TweenMax.killAll();
 
         if(interval){
             clearInterval(interval);
@@ -182,7 +173,7 @@ module.exports = function(audio){
                 return populate(data);
             }
 
-            console.log('Oy homes, we got no tweets for ya!');
+            alert('Oy homes! We got no tweets for ya!');
         });
     };
 
@@ -278,8 +269,6 @@ module.exports = function(audio){
 
                 particle.position.normalize();
                 particle.position.multiplyScalar(Math.random() * 10 + CLUSTER_SIZE);
-                //particle.updateMatrix();    // ?
-                //particle.matrixAutoUpdate = false;  // ?
                 particle.userData.tweet = tweet;
 
             particles.push(particle);
@@ -309,6 +298,8 @@ module.exports = function(audio){
             introSpin(rotationShift);
         }, 3500);
 
+        //rotationShift()
+
         $('.loader').addClass('hidden');
     };
 
@@ -322,9 +313,7 @@ module.exports = function(audio){
             callback();
         }});
 
-        console.log(  camera.position.z  )
-        // Pull out camera and then pull back in
-        //TweenMax.to(camera.position, t, {z : 2000, yoyo: true, repeat: 1, ease: Sine.easeInOut});
+        // Pull out camera
         TweenMax.to(camera.position, t, {z : 800, yoyo: true, repeat: 1, ease: Sine.easeInOut});
     };
 
@@ -356,7 +345,7 @@ module.exports = function(audio){
 
     var zoomToNode = function(){
 
-        // Reset the particle counter when no more particles left
+        // Reset the particle counter when no more particles left (out of range protection)
         if(current == geometry.vertices.length){
             current = 0;
         }
@@ -367,9 +356,54 @@ module.exports = function(audio){
         }
 
         currentParticle = particles[current++];
-        currentParticle.material.color.setHex(0xff69B4);
 
-        // Tweens the vector3d (the lookAt target) that the camera continously look at
+
+        //function componentToHex(c) {
+        //    var hex = c.toString(16);
+        //    return hex.length == 1 ? "0" + hex : hex;
+        //}
+        //
+        //function rgbToHex(r, g, b) {
+        //    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+        //}
+        //
+        //function rgbStringToRGB (str){
+        //
+        //    var a = str.split(',');
+        //
+        //    return {
+        //        r: parseInt(a[0]),
+        //        g: parseInt(a[1]),
+        //        b: parseInt(a[2])
+        //    }
+        //}
+
+
+        //function componentFromStr(numStr, percent) {
+        //    var num = Math.max(0, parseInt(numStr, 10));
+        //    return percent ?
+        //        Math.floor(255 * Math.min(100, num) / 100) : Math.min(255, num);
+        //}
+        //
+        //function rgbToHex(rgb) {
+        //    var rgbRegex = /^rgb\(\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*\)$/;
+        //    var result, r, g, b, hex = "";
+        //    if ( (result = rgbRegex.exec(rgb)) ) {
+        //        r = componentFromStr(result[1], result[2]);
+        //        g = componentFromStr(result[3], result[4]);
+        //        b = componentFromStr(result[5], result[6]);
+        //
+        //        hex = "0x" + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        //    }
+        //    return hex;
+        //}
+
+
+        TweenMax.to(color, 3, {colorProps: {value: 0xff69B4}, ease: Cubic.easeInOut, onUpdate: function(){
+            currentParticle.material.color.setHex( colorUtil.rgbToHex( color.value ) );
+        }});
+
+        // Tweens the vector3d (the lookAt target) that the camera continously looks at
         TweenMax.to(camaraTarget, 2, {
             x: currentParticle.position.x,
             y: currentParticle.position.y,
@@ -378,25 +412,12 @@ module.exports = function(audio){
         });
 
         // Pull out the camera
-        TweenMax.to(camera.position, 2, {
-            z: 1000,
-            ease: Cubic.easeInOut
-        });
+        TweenMax.to(camera.position, 2, {z: 2000, ease: Cubic.easeInOut});
 
-        TweenMax.to(camera, 2, {fov: 60, ease: Cubic.easeInOut, onUpdate: function(){
-            //console.log('zoom out: ' + camera.fov)
-            camera.updateProjectionMatrix();
-        }});
+        // Zoom the camera in on the node
+        TweenMax.to(camera, 2, {fov: 1, delay: 2, ease: Cubic.easeOut, onUpdate: updateCameraProjectionMatrix});
 
-
-        TweenMax.to(camera, 2, {fov: 1, delay: 2, ease: Cubic.easeInOut, onUpdate: function(){
-            //console.log('zoom in: ' + camera.fov)
-            camera.updateProjectionMatrix();
-        }});
-
-        TweenMax.to(lineContainer, 2, {alpha: 0, delay: 2, ease: Cubic.easeInOut, onUpdate: function(){
-        }});
-
+        //TweenMax.to(lineContainer, 2, {alpha: 0, delay: 2, ease: Cubic.easeInOut});
 
         // Hide mesh
         //for(var i = 0; i < lineContainer.children.length; i++){
@@ -409,23 +430,44 @@ module.exports = function(audio){
         //camera.updateProjectionMatrix();
 
         // Zooms the camera's z pos to the z pos of the current particle
-        TweenMax.to(camera.position, 2, {delay: 2, z: currentParticle.position.z, ease: Cubic.easeInOut, onComplete: function(){
+        TweenMax.to(camera.position, 2, {delay: 1, z: currentParticle.position.z, ease: Cubic.easeInOut, onComplete: function(){
 
+            lineContainer.visible = false;
             setText(currentParticle.userData.tweet.text);
+
+
+
+
+
+
 
             //TweenMax.to(textBox, 1, {opacity: 1});
 
             interval = setInterval(function(){
                 clearInterval(interval);
                 interval = null;
-                currentParticle.material.color.setHex(0xffffff);
+                //currentParticle.material.color.setHex(0xffffff);
 
-                //TweenMax.to(textBox, 0.5, {opacity: 0, onComplete : function(){
-                zoomToNode();
-                //}});
+
+                TweenMax.to(color, 3, {colorProps: {value: 0xffffff}, ease: Cubic.easeInOut, onUpdate: function(){
+                    currentParticle.material.color.setHex( colorUtil.rgbToHex( color.value ) );
+                }});
+
+
+                lineContainer.visible = true;
+
+                TweenMax.to(camera, 2, {fov: 60, delay: 0, ease: Cubic.easeInOut, onUpdate: updateCameraProjectionMatrix, onComplete: function(){
+                    TweenMax.to(camera.position, 4, {delay: 1.5, z: 1000, onComplete : function(){
+                        zoomToNode();
+                    }});
+                }});
 
             }, 3000);
         }});
+    };
+
+    var updateCameraProjectionMatrix = function(){
+        camera.updateProjectionMatrix();
     };
 
     var setText = function(text){
@@ -471,8 +513,6 @@ module.exports = function(audio){
 
     var animate = function() {
         requestAnimationFrame(animate);
-        //controls.update();
-        //hover();
         render();
     };
 
@@ -490,14 +530,14 @@ module.exports = function(audio){
         }
     };
 
-    var positionTextField = function(){
-        if(currentParticle){
-            var v2 = project2d(currentParticle.position, camera, renderer);
-            v2.sub(new THREE.Vector2(200, 200));
-            //textBox.style.left = v2.x + 'px';
-            //textBox.style.top = v2.y + 'px';
-        }
-    };
+    //var positionTextField = function(){
+    //    if(currentParticle){
+    //        var v2 = project2d(currentParticle.position, camera, renderer);
+    //        v2.sub(new THREE.Vector2(200, 200));
+    //        //textBox.style.left = v2.x + 'px';
+    //        //textBox.style.top = v2.y + 'px';
+    //    }
+    //};
 
     /**
      * Projects a 3d vector onto a 2d surface
@@ -506,17 +546,17 @@ module.exports = function(audio){
      * @param renderer
      * @returns {THREE.Vector2}
      */
-    var project2d = function(vector3, camera, renderer){
-
-        //var v = new THREE.Projector().projectVector(vector3.clone(), camera);
-
-        var v = vector3.project(camera);
-
-        return new THREE.Vector2(
-            Math.round(v.x * (renderer.domElement.width / 2) + (renderer.domElement.width / 2)),
-            Math.round(-v.y * (renderer.domElement.height / 2) + (renderer.domElement.height / 2))
-        );
-    };
+    //var project2d = function(vector3, camera, renderer){
+    //
+    //    //var v = new THREE.Projector().projectVector(vector3.clone(), camera);
+    //
+    //    var v = vector3.project(camera);
+    //
+    //    return new THREE.Vector2(
+    //        Math.round(v.x * (renderer.domElement.width / 2) + (renderer.domElement.width / 2)),
+    //        Math.round(-v.y * (renderer.domElement.height / 2) + (renderer.domElement.height / 2))
+    //    );
+    //};
 
     if (!window.innerWidth) {
         window.innerWidth = parent.innerWidth;

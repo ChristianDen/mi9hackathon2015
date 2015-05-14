@@ -75,9 +75,7 @@ module.exports = function(callback){
 
         // Update the gradient size to fit the window
         gradient = canvasCtx.createLinearGradient(0, height / 2, 0, height);
-        //gradient.addColorStop(0, '#fff');
-        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.5)');
-        //gradient.addColorStop(0.8, 'rgba(255, 255, 255, 1)');
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
         gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
     };
 
@@ -115,65 +113,16 @@ module.exports = function(callback){
         canvasCtx.clearRect(0, 0, width, height);
 
         for(var i = 0; i < bufferLength; i++) {
-            barHeight = dataArray[i] * 4;
-            //canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+            barHeight = dataArray[i] * 5;
             canvasCtx.fillStyle = gradient;
             canvasCtx.fillRect(x, height - barHeight / 2, barWidth, barHeight / 2);
-            x += barWidth + 0;
+            x += barWidth;
         }
     };
 
     var update = function(){
-
-        //analyser.getByteTimeDomainData(dataArray);
         analyser.getByteFrequencyData(dataArray);
         drawBars();
-        //var barWidth = (canvas.width / bufferLength) * 5.5,
-        //    barHeight,
-        //    x = 0;
-        //
-        //canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-        //
-        //for(var i = 0; i < bufferLength; i++) {
-        //    barHeight = dataArray[i] * 4;
-        //    //canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-        //    canvasCtx.fillStyle = gradient;
-        //    canvasCtx.fillRect(x, canvas.height - barHeight / 2, barWidth, barHeight / 2);
-        //    x += barWidth + 1;
-        //}
-
-
-
-
-
-
-        //for(var i = 0; i < bufferLength; i++) {
-        //
-        //    canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-        //    canvasCtx.lineWidth = 2;
-        //    canvasCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-        //    canvasCtx.beginPath();
-        //
-        //    var sliceWidth = canvas.width / bufferLength,
-        //        x = 0;
-        //
-        //    for(var i = 0; i < bufferLength; i++) {
-        //
-        //        var v = dataArray[i] / 128,
-        //            y = v * canvas.height / 2;
-        //
-        //        if(i == 0) {
-        //            canvasCtx.moveTo(x, y);
-        //        } else {
-        //            canvasCtx.lineTo(x, y);
-        //        }
-        //
-        //        x += sliceWidth;
-        //    }
-        //
-        //    canvasCtx.lineTo(canvas.width, canvas.height / 2);
-        //    canvasCtx.stroke();
-        //}
     };
 
     init();

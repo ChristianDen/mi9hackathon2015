@@ -7,6 +7,7 @@
 
 $colorBlack: #000000;
 $colorWhite: #ffffff;
+$pageMargin: 40px;
 
 @font-face {
     font-family: 'HelveticaWorld-Regular';
@@ -14,7 +15,6 @@ $colorWhite: #ffffff;
     font-weight: normal;
     font-style: normal;
 }
-
 
 @font-face {
     font-family: 'chemistryregular';
@@ -61,7 +61,7 @@ h2 {
 }
 
 .title {
-    margin: 20px 0 0 20px;
+    margin: $pageMargin 0 0 $pageMargin;
     position: absolute;
     z-index: 1;
     background: rgba(0, 0, 0, 0.25);
@@ -85,14 +85,14 @@ h2 {
 
 .logo-twitter {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    bottom: $pageMargin;
+    right: $pageMargin;
 }
 
 .credits{
   position: absolute;
-  bottom: 20px;
-  left: 20px;
+  bottom: $pageMargin;
+  left: $pageMargin;
   color: rgba(255,255,255,0.5);
   font-size: 14px;
 }
