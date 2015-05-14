@@ -34,22 +34,27 @@
             <canvas id="audio"></canvas>
         </section>
 
-        <div class="loader"></div>
+        <div class="loader hidden"></div>
 
         <div class="title">
             <h1>Chemistry</h1>
             <span>of Tweets</span>
         </div>
 
+        <div class="search">
+            <input type="text" name="hashtag" autofocus>
+            <button id="go" class="btn btn-lg">Go</button>
+        </div>
+
         <div class="credits">
-            By Christian Rich & Chris Turner
+            By Christian Rich
         </div>
 
         <img class="logo-twitter" src="img/twitter-logo-sml.png">
 
-        <!--<div class="tweet"></div>-->
+        <div class="tweet"></div>
 
-        <script src="js/bundle.js"></script>
+        <script src="js/bundle.min.js"></script>
 
         <script>
             var init = function(){

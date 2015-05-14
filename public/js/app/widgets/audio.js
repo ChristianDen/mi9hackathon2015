@@ -19,6 +19,8 @@ module.exports = function(callback){
         canvasCtx = canvas.getContext('2d'),
         gradient;
 
+    var isPlaying = false;
+
     this.getData = function(){
         return analyzerData;
     };
@@ -60,9 +62,16 @@ module.exports = function(callback){
     };
 
     this.start = function(){
+
+        if(isPlaying){
+            return;
+        }
+
+        isPlaying = true;
         window.addEventListener('resize', onWindowResize, false);
         onWindowResize();
         render();
+
         audioSrc.start();
     };
 
@@ -89,6 +98,7 @@ module.exports = function(callback){
             audioCtx.decodeAudioData(xhr.response, function(buffer) {
                 concertHallBuffer = buffer;
                 soundSource = audioCtx.createBufferSource();
+                soundSource.loop = true;
                 soundSource.buffer = concertHallBuffer;
                 callback(null, soundSource);
             }, function(e){

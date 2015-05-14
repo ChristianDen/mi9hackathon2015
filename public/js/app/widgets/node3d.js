@@ -37,15 +37,23 @@ module.exports = function(audio){
     };
 
     var init = function(){
+
         initWebGl();
-        getTweets();
+
+        $('#go').click(query);
+
+        $(document).keypress(function(e) {
+            if(e.which == 13) {
+                query();
+            }
+        });
     };
 
     var initWebGl = function() {
 
         var webgl = document.querySelector('#webgl');
 
-        camera = new THREE.PerspectiveCamera(60, width / height, 1, 2000);
+        camera = new THREE.PerspectiveCamera(60, width / height, 1, 2500);
         camera.position.z = 2000; //800;
         camaraTarget = new THREE.Vector3();
 
@@ -152,7 +160,7 @@ module.exports = function(audio){
         postprocessing.bokeh = bokehPass;
     }
 
-    var getTweets = function(){
+    var getTweets = function(q){
 
         removeChildren(particlesContainer);
 
@@ -161,7 +169,9 @@ module.exports = function(audio){
             interval = null;
         }
 
-        tweetModel.getTweets(function(err, data){
+        $('.loader').removeClass('hidden');
+
+        tweetModel.getTweets(q, function(err, data){
 
             if(err){
                 throw err;
@@ -292,15 +302,27 @@ module.exports = function(audio){
         current = 0;
         currentParticle = null;
 
+        $('.loader').addClass('hidden');
+
         audio.start();
 
         new DelayCall(function(){
             introSpin(rotationShift);
         }, 3500);
+    };
 
-        //rotationShift()
+    var query = function(){
 
-        $('.loader').addClass('hidden');
+        var q = $('input[name="hashtag"]').val();
+            q = String(q).trim();
+
+        if(!q || !q.length){
+            return;
+        }
+
+        $('input[name="hashtag"]').val('');
+
+        getTweets(q);
     };
 
     var introSpin = function(callback){
@@ -350,54 +372,7 @@ module.exports = function(audio){
             current = 0;
         }
 
-        if(currentParticle){
-            //console.log(  currentParticle )
-            //TweenMax.to(currentParticle.scale, 2, {x: 15, y: 15, ease: Cubic.easeInOut});
-        }
-
         currentParticle = particles[current++];
-
-
-        //function componentToHex(c) {
-        //    var hex = c.toString(16);
-        //    return hex.length == 1 ? "0" + hex : hex;
-        //}
-        //
-        //function rgbToHex(r, g, b) {
-        //    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-        //}
-        //
-        //function rgbStringToRGB (str){
-        //
-        //    var a = str.split(',');
-        //
-        //    return {
-        //        r: parseInt(a[0]),
-        //        g: parseInt(a[1]),
-        //        b: parseInt(a[2])
-        //    }
-        //}
-
-
-        //function componentFromStr(numStr, percent) {
-        //    var num = Math.max(0, parseInt(numStr, 10));
-        //    return percent ?
-        //        Math.floor(255 * Math.min(100, num) / 100) : Math.min(255, num);
-        //}
-        //
-        //function rgbToHex(rgb) {
-        //    var rgbRegex = /^rgb\(\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*\)$/;
-        //    var result, r, g, b, hex = "";
-        //    if ( (result = rgbRegex.exec(rgb)) ) {
-        //        r = componentFromStr(result[1], result[2]);
-        //        g = componentFromStr(result[3], result[4]);
-        //        b = componentFromStr(result[5], result[6]);
-        //
-        //        hex = "0x" + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
-        //    }
-        //    return hex;
-        //}
-
 
         TweenMax.to(color, 3, {colorProps: {value: 0xff69B4}, ease: Cubic.easeInOut, onUpdate: function(){
             currentParticle.material.color.setHex( colorUtil.rgbToHex( color.value ) );
@@ -417,39 +392,18 @@ module.exports = function(audio){
         // Zoom the camera in on the node
         TweenMax.to(camera, 2, {fov: 1, delay: 2, ease: Cubic.easeOut, onUpdate: updateCameraProjectionMatrix});
 
-        //TweenMax.to(lineContainer, 2, {alpha: 0, delay: 2, ease: Cubic.easeInOut});
-
-        // Hide mesh
-        //for(var i = 0; i < lineContainer.children.length; i++){
-        //    var mesh = lineContainer.children[i];
-        //    mesh.material.opacity = 0.2;
-        //}
-
-        //console.log('zoom')
-        //camera.fov *= 2;
-        //camera.updateProjectionMatrix();
-
         // Zooms the camera's z pos to the z pos of the current particle
         TweenMax.to(camera.position, 2, {delay: 1, z: currentParticle.position.z, ease: Cubic.easeInOut, onComplete: function(){
 
             lineContainer.visible = false;
+
             setText(currentParticle.userData.tweet.text);
-
-
-
-
-
-
-
-            //TweenMax.to(textBox, 1, {opacity: 1});
 
             interval = setInterval(function(){
                 clearInterval(interval);
                 interval = null;
-                //currentParticle.material.color.setHex(0xffffff);
 
-
-                TweenMax.to(color, 3, {colorProps: {value: 0xffffff}, ease: Cubic.easeInOut, onUpdate: function(){
+                TweenMax.to(color, 2, {delay: 1, colorProps: {value: 0xffffff}, ease: Cubic.easeInOut, onUpdate: function(){
                     currentParticle.material.color.setHex( colorUtil.rgbToHex( color.value ) );
                 }});
 
@@ -462,7 +416,7 @@ module.exports = function(audio){
                     }});
                 }});
 
-            }, 3000);
+            }, 4000);
         }});
     };
 
@@ -472,26 +426,28 @@ module.exports = function(audio){
 
     var setText = function(text){
 
+
+        $('.tweet').html(text);
         console.log(text);
 
-        var $t = $('.tweet');
-
-        $t.typed({
-            strings: [text],
-            typeSpeed: 2,
-            loop: false,
-            contentType: 'text',
-            showCursor : false,
-            loopCount: false,
-
-            callback: function(){
-                console.log('callback')
-            },
-
-            resetCallback: function() {
-                console.log('resetCallback')
-            }
-        });
+        //var $t = $('.tweet');
+        //
+        //$t.typed({
+        //    strings: [text],
+        //    typeSpeed: 2,
+        //    loop: false,
+        //    contentType: 'text',
+        //    showCursor : false,
+        //    loopCount: false,
+        //
+        //    callback: function(){
+        //        console.log('callback')
+        //    },
+        //
+        //    resetCallback: function() {
+        //        console.log('resetCallback')
+        //    }
+        //});
     };
 
     var onWindowResize = function() {
@@ -529,34 +485,6 @@ module.exports = function(audio){
             );
         }
     };
-
-    //var positionTextField = function(){
-    //    if(currentParticle){
-    //        var v2 = project2d(currentParticle.position, camera, renderer);
-    //        v2.sub(new THREE.Vector2(200, 200));
-    //        //textBox.style.left = v2.x + 'px';
-    //        //textBox.style.top = v2.y + 'px';
-    //    }
-    //};
-
-    /**
-     * Projects a 3d vector onto a 2d surface
-     * @param vector3
-     * @param camera
-     * @param renderer
-     * @returns {THREE.Vector2}
-     */
-    //var project2d = function(vector3, camera, renderer){
-    //
-    //    //var v = new THREE.Projector().projectVector(vector3.clone(), camera);
-    //
-    //    var v = vector3.project(camera);
-    //
-    //    return new THREE.Vector2(
-    //        Math.round(v.x * (renderer.domElement.width / 2) + (renderer.domElement.width / 2)),
-    //        Math.round(-v.y * (renderer.domElement.height / 2) + (renderer.domElement.height / 2))
-    //    );
-    //};
 
     if (!window.innerWidth) {
         window.innerWidth = parent.innerWidth;

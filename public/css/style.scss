@@ -130,48 +130,27 @@ a:hover {
     }
 }
 
-section.overlay {
+.search{
     position: absolute;
-    top: 0;
-    left: 0;
-    margin: 20px;
-    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    top: 200px;
+    left: 40px;
 
-    .search {
-        margin: 20px;
+    input{
+      color: $colorBlack;
+      padding: 0 10px 0 10px;
+      border-radius: 8px;
+      border: none;
+      background-color: rgba(255, 255, 255, 0.5);
+      height: 38px;
     }
 
-    .search h1 {
-        margin-bottom: 10px;
-    }
-
-    .search input {
-        margin: 10px 0 10px 0;
-    }
-
-    .textBox {
-        position: absolute;
-        width: 340px;
-        height: 200px;
-        display: block;
-        color: white;
-        margin-top: 10px;
-    }
-
-    .textBox h1 {
-        font-size: 70px;
-        margin-bottom: 10px;
-    }
-
-    .textBox p {
-        font-size: 24px;
-        line-height: 120%;
-    }
-
-    .loading {
-        width: 32px;
-        height: 32px;
-        margin-top: 10px;
+    button{
+      color: $colorBlack;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: none;
+      font-size: 14px;
+      border-radius: 8px;
     }
 }
 

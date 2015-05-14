@@ -4,10 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-var routes = require('./routes/index');
 var swig = require('swig');
-
 var app = express();
 
 app.engine('html', swig.renderFile);
@@ -19,16 +16,17 @@ swig.setDefaults({
 
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
-
-// uncomment after placing your favicon in /public
-app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+require('./routes/index')(app);
+
+var server = app.listen('3001', function() {
+    console.info('server running: ' + JSON.stringify(server.address()));
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -66,6 +64,5 @@ app.use(function (err, req, res, next) {
         error: {}
     });
 });
-
 
 module.exports = app;

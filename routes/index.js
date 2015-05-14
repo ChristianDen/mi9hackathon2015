@@ -10,35 +10,45 @@ var twitterClient = new Twitter({
     access_token_secret: 'lkk3nYRXuUGQo5dRgIKH2fExg8x87H9EBVd2WQXDww'
 });
 
-router.get('/', function(req, res, next) {
+module.exports = function(app){
 
-    //console.log('hash: ' + req.param('hashtag'))
-    res.render('index');
-});
+    app.get('/', function(req, res, next) {
 
-router.get('/data/tweets', function(req, res, next) {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(tweets);
-});
-
-router.get('/twitter', function(req, res, next) {
-
-    var params = {
-        screen_name: 'nodejs'
-    };
-
-    //'statuses/user_timeline'
-    //statuses/retweets/509457288717819904.json
-
-    twitterClient.get('statuses/retweets/509457288717819904', params, function(error, tweets, response){
-
-        if(error) {
-            console.log(error);
-        }
-
-        res.setHeader('Content-Type', 'application/json');
-        res.send(tweets);
+        //console.log('hash: ' + req.param('hashtag'))
+        res.render('index');
     });
-});
 
-module.exports = router;
+    //router.get('/data/tweets', function(req, res, next) {
+    //    res.setHeader('Content-Type', 'application/json');
+    //    res.send(tweets);
+    //});
+
+    app.get('/twitter/:hashtag', function(req, res, next) {
+
+        var params = {
+            q: req.param('hashtag')
+        };
+
+        //twitterClient.stream('statuses/filter', {track: 'kardashian'}, function(stream) {
+        //    stream.on('data', function (tweet) {
+        //        console.log(tweet.text);
+        //    });
+        //});
+
+        twitterClient.get('search/tweets', params, function(error, tweets, response){
+
+            res.setHeader('Content-Type', 'application/json');
+
+            if(error) {
+                return res.send(error);
+            }
+
+            if(tweets.statuses.length > 50){
+                tweets.statuses = tweets.statuses.slice(0, 50);
+            }
+
+            console.log('len: ' + tweets.statuses.length)
+            res.send(tweets);
+        });
+    });
+};

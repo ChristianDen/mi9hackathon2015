@@ -2,9 +2,9 @@ var request = require('../util/request');
 
 module.exports = {
 
-    getTweets : function(next){
+    getTweets : function(hashtag, next){
 
-        request('GET', 'http://localhost:3001/data/tweets', {dataType: 'json'}, function(err, data){
+        request('GET', 'http://localhost:3001/twitter/' +  hashtag, {dataType: 'json'}, function(err, data){
 
             if(err){
                 return next(err, null);
