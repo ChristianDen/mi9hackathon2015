@@ -1,0 +1,35 @@
+@import "mixins";
+@import "bourbon/bourbon";
+$colorBase: rgba(255, 255, 255, 0.2);
+$colorWhite: #ffffff;
+
+.loader {
+  font-size: 10px;
+  position: absolute;
+  z-index: 10;
+  left: calc(50% - 70px);
+  top: calc(50% - 70px);
+  text-indent: -9999em;
+  border-top: 1.1em solid $colorBase;
+  border-right: 1.1em solid $colorBase;
+  border-bottom: 1.1em solid $colorBase;
+  border-left: 1.1em solid $colorWhite;
+  @include transform(translateZ(0));
+  @include animation(spinMe 0.5s infinite linear);
+}
+
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 140px;
+  height: 140px;
+}
+
+@include keyframes(spinMe) {
+  0% {
+    @include transform(rotate(0deg));
+  }
+  100% {
+    @include transform(rotate(360deg));
+  }
+}

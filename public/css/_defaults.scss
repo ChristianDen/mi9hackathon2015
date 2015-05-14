@@ -1,0 +1,32 @@
+
+.hidden{
+  display: none !important;
+  visibility: hidden;
+}
+
+.transparent{
+  opacity: 0;
+}
+
+.semi-transparent{
+  opacity: 0.5;
+}
+
+.opaque{
+  opacity: 1;
+}
+
+.no-transition{
+  -webkit-transition: none;
+}
+
+.unselectable {
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}

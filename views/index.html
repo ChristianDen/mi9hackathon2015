@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Chemistry of Tweets || mi9 Hackathon 2015</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="css/vendor/bootstrap.min.css">
+        <link href="css/style.css" rel="stylesheet" type="text/css">
+
+        <!-- Misc vendor libs -->
+        <script src="js/vendor/jquery-2.1.4.min.js"></script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/vendor/underscore-min.js"></script>
+        <script src="js/vendor/typed.js"></script>
+        <script src='js/vendor/dat.gui.min.js'></script>
+        <script src="js/vendor/greensock/TweenMax.min.js"></script>
+
+        <!-- THREE.js -->
+        <script src="js/vendor/threejs/build/three.min.js"></script>
+        <script src="js/vendor/threejs/examples/js/shaders/CopyShader.js"></script>
+        <script src="js/vendor/threejs/examples/js/shaders/BokehShader.js"></script>
+        <script src="js/vendor/threejs/postprocessing/EffectComposer.js"></script>
+        <script src="js/vendor/threejs/postprocessing/RenderPass.js"></script>
+        <script src="js/vendor/threejs/postprocessing/ShaderPass.js"></script>
+        <script src="js/vendor/threejs/postprocessing/MaskPass.js"></script>
+        <script src="js/vendor/threejs/postprocessing/BokehPass.js"></script>
+        <!--<script src="js/vendor/threejs/examples/js/controls/OrbitControls.js"></script>-->
+	</head>
+
+	<body>
+        <section class="twitterNodes">
+            <div id="webgl"></div>
+            <canvas id="audio"></canvas>
+        </section>
+
+        <div class="loader"></div>
+
+        <div class="title">
+            <h1>Chemistry</h1>
+            <span>of Tweets</span>
+        </div>
+
+        <div class="credits">
+            By Christian Rich & Chris Turner
+        </div>
+
+        <img class="logo-twitter" src="img/twitter-logo-sml.png">
+
+        <!--<div class="tweet"></div>-->
+
+        <script src="js/bundle.js"></script>
+
+        <script>
+            var init = function(){
+
+                setTimeout(function(){
+                    new twitterNodes.View3d();
+                }, 500)};
+        </script>
+	</body>
+</html>

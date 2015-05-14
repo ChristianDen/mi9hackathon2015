@@ -1,0 +1,204 @@
+@import "normalize";
+@import "reset";
+@import "defaults";
+@import "loader";
+@import "mixins";
+@import "bourbon/bourbon";
+
+$colorBlack: #000000;
+$colorWhite: #ffffff;
+
+@font-face {
+    font-family: 'HelveticaWorld-Regular';
+    src: url('../fonts/HelveticaWorld-Regular.eot?#iefix') format('embedded-opentype'), url('../fonts/HelveticaWorld-Regular.woff') format('woff'), url('../fonts/HelveticaWorld-Regular.ttf') format('truetype'), url('../fonts/HelveticaWorld-Regular.svg#HelveticaWorld-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'chemistryregular';
+    src: url('../fonts/chemistr-webfont.eot');
+    src: url('../fonts/chemistr-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/chemistr-webfont.woff2') format('woff2'),
+    url('../fonts/chemistr-webfont.woff') format('woff'),
+    url('../fonts/chemistr-webfont.ttf') format('truetype'),
+    url('../fonts/chemistr-webfont.svg#chemistryregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#stats {
+    position: absolute;
+    right: 0;
+}
+
+body {
+    font-family: 'HelveticaWorld-Regular', sans-serif;
+    width: 100%;
+    height: 100%;
+    min-width: 800px;
+    min-height: 600px;
+    margin: 0;
+    padding: 0;
+    background-color: $colorBlack;
+    color: $colorWhite;
+    overflow: hidden;
+}
+
+h1 {
+    font-size: 26px;
+    font-family: 'chemistryregular', sans-serif;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 55px;
+}
+
+h2 {
+    font-size: 14px;
+}
+
+.title {
+    margin: 20px 0 0 20px;
+    position: absolute;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.25);
+    height: 150px;
+    padding: 20px;
+    font-family: 'chemistryregular', sans-serif;
+
+    h1 {
+        padding: 5px 0 0 0;
+        margin: 0;
+        font-size: 56px;
+    }
+
+    span {
+        position: absolute;
+        left: 73px;
+        font-size: 30px;
+        top: 100px;
+    }
+}
+
+.logo-twitter {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.credits{
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: rgba(255,255,255,0.5);
+  font-size: 14px;
+}
+
+a {
+    color: $colorWhite;
+    text-decoration: none;
+    display: block;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.twitterNodes {
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    @include radial-gradient(#36ceff, #006ab8);
+
+    canvas {
+        display: block;
+    }
+
+    #webgl {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    #audio {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+section.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+
+    .search {
+        margin: 20px;
+    }
+
+    .search h1 {
+        margin-bottom: 10px;
+    }
+
+    .search input {
+        margin: 10px 0 10px 0;
+    }
+
+    .textBox {
+        position: absolute;
+        width: 340px;
+        height: 200px;
+        display: block;
+        color: white;
+        margin-top: 10px;
+    }
+
+    .textBox h1 {
+        font-size: 70px;
+        margin-bottom: 10px;
+    }
+
+    .textBox p {
+        font-size: 24px;
+        line-height: 120%;
+    }
+
+    .loading {
+        width: 32px;
+        height: 32px;
+        margin-top: 10px;
+    }
+}
+
+.tweet {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 70px;
+    margin: 50px;
+    padding: 50px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.typed-cursor {
+    @include opacity(1);
+    @include animation(blink 0.7s infinite);
+}
+
+@include keyframes(blink) {
+    0% {
+        @include opacity(1);
+    }
+
+    50% {
+        @include opacity(0);
+    }
+
+    100% {
+        @include opacity(1);
+    }
+}
