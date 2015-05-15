@@ -13,20 +13,17 @@ var twitterClient = new Twitter({
 module.exports = function(app){
 
     app.get('/', function(req, res, next) {
-
-        //console.log('hash: ' + req.param('hashtag'))
         res.render('index');
     });
 
-    //router.get('/data/tweets', function(req, res, next) {
-    //    res.setHeader('Content-Type', 'application/json');
-    //    res.send(tweets);
-    //});
-
     app.get('/twitter/:hashtag', function(req, res, next) {
 
+        var maxLen = 50;
+
         var params = {
-            q: req.param('hashtag')
+            // express deprecated req.param(name): Use req.params, req.body, or req.query instead at routes/index.js:33:20
+            q: req.param('hashtag'),
+            count: maxLen
         };
 
         //twitterClient.stream('statuses/filter', {track: 'kardashian'}, function(stream) {
@@ -40,14 +37,14 @@ module.exports = function(app){
             res.setHeader('Content-Type', 'application/json');
 
             if(error) {
-                return res.send(error);
+                return res.send(require('../data/9jumpin.json'));
             }
 
-            if(tweets.statuses.length > 50){
-                tweets.statuses = tweets.statuses.slice(0, 50);
+            if(tweets.statuses.length > maxLen){
+                tweets.statuses = tweets.statuses.slice(0, maxLen);
             }
 
-            console.log('len: ' + tweets.statuses.length)
+            console.log('len: ' + tweets.statuses.length);
             res.send(tweets);
         });
     });

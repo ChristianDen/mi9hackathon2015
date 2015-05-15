@@ -16,6 +16,7 @@
         <script src="js/vendor/greensock/TweenMax.min.js"></script>
         <script src="js/vendor/greensock/plugins/ColorPropsPlugin.min.js"></script>
         <script src="js/vendor/greensock/plugins/CSSPlugin.min.js"></script>
+        <!--<script src="js/vendor/greensock/utils/SplitText.min.js"></script>-->
 
         <!-- THREE.js -->
         <script src="js/vendor/threejs/build/three.min.js"></script>
@@ -26,7 +27,6 @@
         <script src="js/vendor/threejs/postprocessing/ShaderPass.js"></script>
         <script src="js/vendor/threejs/postprocessing/MaskPass.js"></script>
         <script src="js/vendor/threejs/postprocessing/BokehPass.js"></script>
-        <!--<script src="js/vendor/threejs/examples/js/controls/OrbitControls.js"></script>-->
 	</head>
 
 	<body>
@@ -43,7 +43,7 @@
         </div>
 
         <div class="search">
-            <input type="text" name="hashtag" placeholder="#hashtag" autofocus>
+            <input type="text" name="hashtag" placeholder="#hashtag" autocomplete="off" autofocus>
             <button id="go" class="btn btn-lg">Go</button>
         </div>
 
@@ -59,7 +59,6 @@
 
         <script>
             var init = function(){
-
                 setTimeout(function(){
                     new twitterNodes.View3d();
                 }, 500)};

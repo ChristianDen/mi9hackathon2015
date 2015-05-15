@@ -642,7 +642,7 @@ module.exports = function(audio){
 
     var getTweets = function(q){
 
-        removeChildren(particlesContainer);
+        //removeChildren(particlesContainer);
 
         if(interval){
             clearInterval(interval);
@@ -735,6 +735,14 @@ module.exports = function(audio){
     };
 
     var populate = function(res){
+
+        TweenMax.killAll();
+        removeChildren(particlesContainer);
+        removeChildren(lineContainer);
+
+        TweenMax.to('.tweet', 1, {css: {opacity: 0}, ease: Cubic.easeOut, onComplete: function(){
+            $('.tweet').html('');
+        }});
 
         var preCalcPos = generatePositions(res.length);
 
@@ -883,7 +891,9 @@ module.exports = function(audio){
                 clearInterval(interval);
                 interval = null;
 
-                TweenMax.to('.tweet', 1, {css: {opacity: 0}, ease: Cubic.easeOut});
+                TweenMax.to('.tweet', 0.75, {css: {opacity: 0}, ease: Cubic.easeOut, onComplete: function(){
+                    $('.tweet').html('');
+                }});
 
                 TweenMax.to(color, 2, {delay: 1, colorProps: {value: 0xffffff}, ease: Cubic.easeInOut, onUpdate: function(){
                     currentParticle.material.color.setHex( colorUtil.rgbToHex( color.value ) );
@@ -897,7 +907,7 @@ module.exports = function(audio){
                     }});
                 }});
 
-            }, 4000);
+            }, 5000);
         }});
     };
 
@@ -908,7 +918,31 @@ module.exports = function(audio){
     var setText = function(text){
 
         $('.tweet').html(text);
-        TweenMax.to('.tweet', 1, {css: {opacity: 1}, ease: Cubic.easeOut});
+
+        var doNext = function(){
+
+            var quote = document.querySelector('.tweet'),
+                mySplitText = new SplitText(quote, {type:"words"}),
+                tl = new TimelineMax({delay:0}),
+                numWords = mySplitText.words.length;
+
+            //prep the quote div for 3D goodness
+            TweenMax.set(quote, {transformPerspective:600, perspective:300, transformStyle:"preserve-3d", autoAlpha:1});
+
+            //intro sequence
+            for(var i = 0; i < numWords; i++){
+                tl.from(mySplitText.words[i], 1, {z:randomNumber(-500,300), opacity:0, rotationY:randomNumber(-40, 40)}, Math.random()*1.5);
+            }
+
+            //some helper functions
+            function randomNumber(min, max){
+                return Math.floor(Math.random() * (1 + max - min) + min);
+            }
+        };
+
+        //doNext();
+        TweenMax.to('.tweet', 1, {delay: 0.25, css: {opacity: 1}, ease: Cubic.easeOut});
+
 
         //var $t = $('.tweet');
         //
