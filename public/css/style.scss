@@ -6,6 +6,7 @@
 @import "bourbon/bourbon";
 
 $colorBlack: #000000;
+$colorBlackTransparent: rgba(0, 0, 0, 0.3);
 $colorWhite: #ffffff;
 $pageMargin: 40px;
 
@@ -64,7 +65,7 @@ h2 {
     margin: $pageMargin 0 0 $pageMargin;
     position: absolute;
     z-index: 1;
-    background: rgba(0, 0, 0, 0.25);
+    background: $colorBlackTransparent;
     height: 150px;
     padding: 20px;
     font-family: 'chemistryregular', sans-serif;
@@ -133,8 +134,8 @@ a:hover {
 .search{
     position: absolute;
     z-index: 2;
-    top: 200px;
-    left: 40px;
+    top: 40px;
+    left: 439px;
 
     input{
       color: $colorBlack;
@@ -143,6 +144,11 @@ a:hover {
       border: none;
       background-color: rgba(255, 255, 255, 0.5);
       height: 38px;
+    }
+
+    // http://stackoverflow.com/questions/2610497/change-an-inputs-html5-placeholder-color-with-css
+    ::-webkit-input-placeholder {
+      color: #666;
     }
 
     button{
@@ -156,12 +162,13 @@ a:hover {
 
 .tweet {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 230px;
+    left: $pageMargin;
     font-size: 70px;
-    margin: 50px;
     padding: 50px;
-    background-color: rgba(0, 0, 0, 0.5);
+    margin: 0 150px 0 0;
+    background-color: $colorBlackTransparent;
+    @include opacity(0);
 }
 
 .typed-cursor {

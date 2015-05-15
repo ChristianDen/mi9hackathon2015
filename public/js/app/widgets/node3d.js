@@ -403,10 +403,11 @@ module.exports = function(audio){
                 clearInterval(interval);
                 interval = null;
 
+                TweenMax.to('.tweet', 1, {css: {opacity: 0}, ease: Cubic.easeOut});
+
                 TweenMax.to(color, 2, {delay: 1, colorProps: {value: 0xffffff}, ease: Cubic.easeInOut, onUpdate: function(){
                     currentParticle.material.color.setHex( colorUtil.rgbToHex( color.value ) );
                 }});
-
 
                 lineContainer.visible = true;
 
@@ -426,9 +427,8 @@ module.exports = function(audio){
 
     var setText = function(text){
 
-
         $('.tweet').html(text);
-        console.log(text);
+        TweenMax.to('.tweet', 1, {css: {opacity: 1}, ease: Cubic.easeOut});
 
         //var $t = $('.tweet');
         //
